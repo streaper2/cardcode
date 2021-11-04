@@ -1,5 +1,5 @@
-import 'package:cardcode/Controllers/CodeController.dart';
-import 'package:cardcode/Controllers/EditingController.dart';
+import 'package:cardcode/Controllers/code_controller.dart';
+import 'package:cardcode/Controllers/editing_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -19,22 +19,44 @@ class Keyboard extends StatelessWidget {
       child: Wrap(
         children: [
           for (var i = this.debut; i < this.fin; i++)
-            ElevatedButton(
-              child: Text(
-                  this.letter ? String.fromCharCode(i) : (i - 64).toString()),
-              onPressed: () {
-                if (letter) {
-                  codeController.chooseLetter(String.fromCharCode(i));
-                } else {
-                  codeController.chooseNumber(i - 64);
-                }
-              },
-              onLongPress: () {
-                edCtrl.editing.value = !edCtrl.editing.value;
-              },
-              style: ElevatedButton.styleFrom(
-                fixedSize: Size(80, 50),
-              ),
+            Obx(
+              () => ElevatedButton(
+                  child: Text(this.letter
+                      ? String.fromCharCode(i)
+                      : (i - 64).toString()),
+                  onPressed: () {
+                    if (letter) {
+                      codeController.chooseLetter(String.fromCharCode(i));
+                    } else {
+                      codeController.chooseNumber(i - 64);
+                    }
+                    print(codeController.letter.value);
+                  },
+                  onLongPress: () {
+                    edCtrl.editing.value = !edCtrl.editing.value;
+                  },
+                  /*style: ElevatedButton.styleFrom(
+                  primary:
+                      codeController.letter.value == String.fromCharCode(i) &&
+                              this.letter
+                          ? Colors.amber
+                          : Colors.blue,
+                  fixedSize: Size(80, 50),
+                ),*/
+                  style: letter
+                      ? ElevatedButton.styleFrom(
+                          primary: codeController.letter.value ==
+                                  String.fromCharCode(i)
+                              ? Colors.amber
+                              : Colors.blue,
+                          fixedSize: Size(80, 50),
+                        )
+                      : ElevatedButton.styleFrom(
+                          primary: codeController.number.value == i - 64
+                              ? Colors.amber
+                              : Colors.blue,
+                          fixedSize: Size(80, 50),
+                        )),
             ),
         ],
       ),
